@@ -43,6 +43,14 @@ def check_start_at_login():
 if __name__ == '__main__':
     time1 = time.time()
 
+    try:
+        jxpj.check_username_password()
+    except:
+        traceback.print_exc()
+        print u'程序出问题，请联系QQ：735486078'
+        os.system('pause')
+        exit(0)
+
     check_start_at_login()
 
     t = 10 - int(time.time() - time1)
@@ -55,7 +63,7 @@ if __name__ == '__main__':
 
     try:
         jxpj.dojxpj()
-    except Exception, e:
+    except:
         traceback.print_exc()
         print u'程序出问题，请联系QQ：735486078'
         os.system('pause')

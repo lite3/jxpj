@@ -11,7 +11,8 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 
 
-USERNAME='HY12030001'
+USERNAME=''
+# 初始密码为123456或学号
 PASSWORD='123456'
 
 
@@ -197,8 +198,17 @@ def doPingjia():
         doPingjiaKecheng(copydata)
 
 
+def check_username_password():
+    if len(USERNAME) == 0 or len(PASSWORD) == 0:
+        print u'\n\n\t用户名密码未设置，必须要先在 jxpj.py 中设置\n\n'
+        raise Exception, 'please set USERNAME and PASSWORD in jxpj.py'
+
+
 def dojxpj():
     global cookie, opener
+
+    check_username_password()
+
     cookie = cookielib.CookieJar()  
     opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookie))
 

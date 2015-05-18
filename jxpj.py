@@ -15,6 +15,8 @@ USERNAME='HY12030001'
 PASSWORD='123456'
 
 
+cookie = None
+opener = None
 
 
 # create a subclass and override the handler methods
@@ -81,11 +83,12 @@ class MyHTMLParser(HTMLParser):
             if 'checked' in attrs:
                 self.selection[name][0] = len(self.selection[name]) - 1
         elif t == 'checkbox':
-            print 'now can not suppor checkbox'
+            pass
+            # print 'now can not suppor checkbox'
         else:
             self.inputAttr[name] = attrs['value'] if 'value' in attrs else ''
-            if t == 'hidden' and name == '__VIEWSTATE':
-                print 'hidden', name, self.inputAttr[name]
+            # if t == 'hidden' and name == '__VIEWSTATE':
+            #     print 'hidden', name, self.inputAttr[name]
 
     def _handle_option(self, attrs):
         attrs = dict(attrs)
@@ -97,33 +100,9 @@ class MyHTMLParser(HTMLParser):
     def getPostMap(self):
         m = self.inputAttr.copy()
         for k, v in self.selection.iteritems():
-            print k, v
             m[k] = v[v[0]]
         return m
 
-
-
-cookie = cookielib.CookieJar()  
-opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookie))
-
-# get seetion id
-response = opener.open('http://www.sjtuce.net/xxpt/jrjxpjLogin.aspx')
-html = response.read()
-parser = MyHTMLParser()
-parser.feed(html)
-
-# login
-data = parser.getPostMap()
-data['user'] = USERNAME
-data['Password'] = PASSWORD
-
-response = opener.open('http://www.sjtuce.net/xxpt/jrjxpjLogin.aspx', urllib.urlencode(data))  
-print response.geturl()
-html = response.read()  
-print 'cookie:'
-for item in cookie: 
-    print item.name, item.value
-# print html
 
 def s2i(s):
     n = 0
@@ -139,10 +118,10 @@ def doPingjiaKechengRiqi(data):
     url = 'http://www.sjtuce.net/xxpt/jrJxjhpjNew.aspx'
 
     response = opener.open(url, urllib.urlencode(data))
-    print 'new url:', response.geturl()
-    print 'cookie:'
-    for item in cookie: 
-        print item.name, item.value
+    # print 'new url:', response.geturl()
+    # print 'cookie:'
+    # for item in cookie: 
+    #     print item.name, item.value
     html = response.read()
     parser = MyHTMLParser()
     parser.feed(html)
@@ -151,10 +130,6 @@ def doPingjiaKechengRiqi(data):
     # 添加具体评分
     if s2i(data['_ctl0:MainContent:dgNetzy:_ctl2:rbd']) == 5:
         return
-
-    print '---------------------------'
-    print data
-    print '+++++++++++++++++++++++++++'
 
     # 去掉刷新本栏
     del data['_ctl0:MainContent:Button5']
@@ -175,10 +150,10 @@ def doPingjiaKechengRiqi(data):
     data['_ctl0:MainContent:cZySummary'] = '很好'
 
     response = opener.open(url, urllib.urlencode(data))
-    print 'new url:', response.geturl()
-    print 'cookie:'
-    for item in cookie: 
-        print item.name, item.value
+    # print 'new url:', response.geturl()
+    # print 'cookie:'
+    # for item in cookie: 
+    #     print item.name, item.value
     
 
 def doPingjiaKecheng(data):
@@ -186,10 +161,10 @@ def doPingjiaKecheng(data):
     # data post 数据
     url = 'http://www.sjtuce.net/xxpt/jrJxjhpjNew.aspx'
     response = opener.open(url, urllib.urlencode(data))
-    print 'new url:', response.geturl()
-    print 'cookie:'
-    for item in cookie: 
-        print item.name, item.value
+    # print 'new url:', response.geturl()
+    # print 'cookie:'
+    # for item in cookie: 
+    #     print item.name, item.value
     html = response.read()
     parser = MyHTMLParser()
     parser.feed(html)
@@ -206,10 +181,10 @@ def doPingjia():
     # get do 教学评价
     url = 'http://www.sjtuce.net/xxpt/jrJxjhpjNew.aspx'
     response = opener.open(url)
-    print 'new url:', response.geturl()
-    print 'cookie:'
-    for item in cookie: 
-        print item.name, item.value
+    # print 'new url:', response.geturl()
+    # print 'cookie:'
+    # for item in cookie: 
+    #     print item.name, item.value
     html = response.read()
     parser = MyHTMLParser()
     parser.feed(html)
@@ -221,7 +196,34 @@ def doPingjia():
         copydata['_ctl0:MainContent:dplKc'] = v
         doPingjiaKecheng(copydata)
 
-    
 
+def dojxpj():
+    global cookie, opener
+    cookie = cookielib.CookieJar()  
+    opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookie))
 
-doPingjia()
+    # get seetion id
+    response = opener.open('http://www.sjtuce.net/xxpt/jrjxpjLogin.aspx')
+    html = response.read()
+    parser = MyHTMLParser()
+    parser.feed(html)
+
+    # login
+    data = parser.getPostMap()
+    data['user'] = USERNAME
+    data['Password'] = PASSWORD
+
+    response = opener.open('http://www.sjtuce.net/xxpt/jrjxpjLogin.aspx', urllib.urlencode(data))  
+    # print response.geturl()
+    html = response.read()  
+    # print 'cookie:'
+    # for item in cookie: 
+    #     print item.name, item.value
+    # print html
+
+    doPingjia()
+
+# -------------- main --------------
+if __name__ == '__main__':
+    dojxpj()
+

@@ -1,0 +1,5 @@
+v1.0.0
+    [NEW]   Windows开机自启动优化，自动添加开机启动项
+    [NEW]   Linux计划任务启用
+    [NEW]   检查用户名密码是否设置
+    [NEW]   Windows开机自启动

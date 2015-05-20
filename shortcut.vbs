@@ -14,11 +14,14 @@ targetpath = WScript.Arguments(1)
 
 Set wshShell = WSH.CreateObject("WScript.Shell")
 '  strDir = wshShell.SpecialFolders("Startup")
-  Set shortcut = wshShell.CreateShortcut(lnkpath)
+Set shortcut = wshShell.CreateShortcut(lnkpath)
+If shortcut.TargetPath <> targetpath Then
     shortcut.TargetPath = targetpath
     shortcut.WindowStyle = 1
     shortcut.Save
-  Set shortcut = Nothing
+End If
+Set shortcut = Nothing
 Set wshShell = Nothing
 
-
+' return 1, if can not save shortcut, the script will return 0
+WScript.Quit 1

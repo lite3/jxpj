@@ -13,14 +13,15 @@ sys.setdefaultencoding('utf-8')
 
 
 def create_lnk(lnkpath, targetpath):
-    print u'\n\n\t该程序可能会触发安全软件提醒，请选择允许运行！\n\n'
+    """ 创建或设置快捷方式
+    """
+    print u'\n\n\t正在设置开机自启动，请选择允许运行！\n\n'
     # time.sleep(3)
-    vbspath = os.path.join(sys.path[0], 'startup.vbs')
+    vbspath = os.path.join(sys.path[0], 'shortcut.vbs')
     command = 'cmd /c ""%s" "%s" "%s""' % (vbspath, lnkpath, targetpath)
-    # try:
-    subprocess.check_output(command)
-    # except :
-    #     pass
+    code = subprocess.call(command)
+    # 由于vbs不论是否正常退出，都返回0，所以手动返回1表示成功
+    return code == 1
     
 
 def check_start_at_login():
@@ -31,12 +32,12 @@ def check_start_at_login():
     lnkpath = os.environ['USERPROFILE']
     lnkpath = os.path.join(lnkpath, r'AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup')
     lnkpath = os.path.join(lnkpath, 'startup.py.lnk')
-    # lnkpath = lnkpath.replace('\\', '/')
+    lnkpath = os.path.abspath(lnkpath)
+    targetpath = os.path.join(sys.path[0], 'startup.py')
+    targetpath = os.path.abspath(targetpath)
 
-    while not os.path.exists(lnkpath):
-        targetpath = os.path.join(sys.path[0], 'startup.py')
-        # targetpath = targetpath.replace('\\', '/')
-        create_lnk(lnkpath, targetpath)
+    while not create_lnk(lnkpath, targetpath):
+        pass
 
 
 # -------------- main --------------

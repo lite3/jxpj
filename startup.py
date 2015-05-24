@@ -42,7 +42,7 @@ def check_start_at_login():
 
 # -------------- main --------------
 if __name__ == '__main__':
-    time1 = time.time()
+    endTime = time.time() + 10
 
     try:
         jxpj.check_username_password()
@@ -54,12 +54,24 @@ if __name__ == '__main__':
 
     check_start_at_login()
 
-    t = 10 - int(time.time() - time1)
-    if t > 1:
-        print u'\t为了避免刚启动时网络还未正常连接，请等待', t, u'秒'
-        time.sleep(t)
+    now = time.time()
+    old = 0
+    status = None
+    while now <= endTime:
+        now = time.time()
+        if now - old > 1:
+            old = now
+            t = int(endTime - now)
+            status = u'\t为了避免刚启动时网络还未正常连接，请等待%d秒' % (t)
+            status += chr(8) * (len(status) + 1)
+            print status,
+            sys.stdout.flush()
 
-
+    # 清理status
+    if status is not None:
+        l = len(status) + 1
+        status = ' ' * l + chr(8) * l
+        print status,
     print u'\t正在评分，请稍后。。。'
 
     try:

@@ -1,3 +1,7 @@
+v1.0.1 beta
+    [FIX]   修复win10上倒计时错乱的问题
+
+
 v1.0.0
     [NEW]   Windows开机自启动优化，自动添加开机启动项
     [NEW]   Linux计划任务启用

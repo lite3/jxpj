@@ -63,7 +63,8 @@ if __name__ == '__main__':
             old = now
             t = int(endTime - now)
             status = u'\t为了避免刚启动时网络还未正常连接，请等待%d秒' % (t)
-            status += chr(8) * (len(status) + 1)
+            # win10上一个中文字符需要多个退格键清楚
+            status += chr(8) * (len(status) *3)
             print status,
             sys.stdout.flush()
 

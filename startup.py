@@ -7,6 +7,7 @@ import traceback
 import jxpj
 import sys
 import subprocess
+import locale
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -54,6 +55,11 @@ if __name__ == '__main__':
 
     check_start_at_login()
 
+    cmdCoding = locale.getpreferredencoding()
+    print 'cmdCoding', cmdCoding
+    if not cmdCoding:
+        cmdCoding = 'gb2312'
+
     now = time.time()
     old = 0
     status = None
@@ -63,17 +69,22 @@ if __name__ == '__main__':
             old = now
             t = int(endTime - now)
             status = u'\t为了避免刚启动时网络还未正常连接，请等待%d秒' % (t)
-            # win10上一个中文字符需要多个退格键清楚
-            status += chr(8) * (len(status) *3)
+            statusLen = len(status.encode(cmdCoding))
+            # print的换行还要退掉，所以要+1
+            status += '\b' * (statusLen + 1)
             print status,
             sys.stdout.flush()
 
     # 清理status
     if status is not None:
-        l = len(status) + 1
-        status = ' ' * l + chr(8) * l
-        print status,
+        l = len(status.encode(cmdCoding)) + 1
+        status = ' ' * l + '\b' * l
+        print status
+        sys.stdout.flush()
+
     print u'\t正在评分，请稍后。。。'
+
+    os.system('pause')
 
     try:
         jxpj.dojxpj()

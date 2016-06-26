@@ -56,7 +56,6 @@ if __name__ == '__main__':
     check_start_at_login()
 
     cmdCoding = locale.getpreferredencoding()
-    print 'cmdCoding', cmdCoding
     if not cmdCoding:
         cmdCoding = 'gb2312'
 
@@ -83,8 +82,6 @@ if __name__ == '__main__':
         sys.stdout.flush()
 
     print u'\t正在评分，请稍后。。。'
-
-    os.system('pause')
 
     try:
         jxpj.dojxpj()
